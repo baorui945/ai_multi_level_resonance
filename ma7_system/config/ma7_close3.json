@@ -1,0 +1,18 @@
+{
+  "_comment": "日线 MA7「上抛」扫描参数（v2：C 主 + B 兜底）。C：段内首次收盘>MA7 起连续 N 根；B：C 未出信号时，允许 1 日回踩后重新站上、连续 N 根；每段只取最早一个。段边界用 MA7 的 5 日斜率。",
+  "ma7_window": 7,
+  "segment": {
+    "slope_window": 5,
+    "start_confirm": 2,
+    "end_confirm": 2
+  },
+  "signal": {
+    "close_above_days": 3,
+    "fallback_reclaim": true,
+    "fallback_min_dip": 1
+  },
+  "scan": {
+    "universe": "hs300",
+    "recent": 5
+  }
+}

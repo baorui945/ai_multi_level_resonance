@@ -1,0 +1,93 @@
+{
+  "_comment": "SQUEEZE：长期均线粘合 + 放量突破。参考形态 600188 兖矿能源（粘合确认日 2026-01-13，突破日 2026-02-04）。",
+  "data": {
+    "start": "2017-01-01",
+    "min_bars": 260
+  },
+  "ma": {
+    "short": 7,
+    "mid": 21,
+    "long": 120
+  },
+  "macd": {
+    "fast": 30,
+    "slow": 89,
+    "signal": 9
+  },
+  "rule": {
+    "max_stick": 0.05,
+    "min_pct": 0.05,
+    "use_vol": true,
+    "use_macd": false,
+    "macd_zero_band": 0.005,
+    "use_ma120_flat": false,
+    "ma120_flat": 0.01,
+    "require_stack": false,
+    "max_range": null,
+    "range_win": 60,
+    "box_win": 120,
+    "box_q": 0.9,
+    "use_form": true,
+    "min_run": 10,
+    "max_box_h": 0.3,
+    "form_win": 60,
+    "need_box": true,
+    "box_tol": 0.02,
+    "ma120_min_chg": -0.005,
+    "use_shape": true,
+    "shape_range20": 0.12,
+    "shape_range40": 0.15,
+    "shape_spike5": 0.12,
+    "shape_crash5": -0.10,
+    "shape_off_low": 0.20,
+    "shape_ma120_over": 0.01,
+    "cooldown_days": 20
+  },
+  "score": {
+    "w_stick": 0.45,
+    "w_pct": 0.3,
+    "w_vol": 0.25,
+    "pct_full": 0.1,
+    "vol_full": 3.0
+  },
+  "grade": {
+    "a_max_stick": 0.03,
+    "a_min_run": 20,
+    "a_min_vol": 1.5,
+    "a_need_box": false,
+    "a_need_stack": false,
+    "b_max_stick": 0.05,
+    "b_min_run": 10,
+    "b_min_vol": 1.2,
+    "b_need_box": false,
+    "b_need_stack": false
+  },
+  "pick": {
+    "min_price": 0.0,
+    "min_amount": 0.0,
+    "exclude_st": false,
+    "exclude_limit": false,
+    "min_grade": "",
+    "watch_band": 0.03,
+    "watch_min_days": 10
+  },
+  "signal": {
+    "min_score": 0.0
+  },
+  "exit": {
+    "horizons": [5, 10, 20, 40],
+    "main_horizon": 20,
+    "cost": 0.002
+  },
+  "backtest": {
+    "date_start": "2017-01-01",
+    "split": "2023-01-01"
+  },
+  "reference": {
+    "code": "600188",
+    "coil_date": "2026-01-13",
+    "breakout_date": "2026-02-04",
+    "chart": "MA7 13.29 / MA21 13.01 / MA120 13.15, DIF 0.02 / DEA -0.01（前复权）",
+    "_note": "图表标称 2025-01，缓存中能同时满足三条均线相对位置与 DIF≈0.02 的日期是 2026-01-13（比例完全一致，前复权系数≈6.70）。"
+  }
+}

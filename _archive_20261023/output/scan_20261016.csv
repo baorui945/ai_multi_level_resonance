@@ -1,0 +1,2 @@
+﻿stock_code,stock_name,trade_date,open_price,high_price,low_price,close_price,volume,amount,dif,dea,hist,ma_short_d,ma_long_d,up_daily,cross,bars_since_cross,up_weekly,up_monthly,resonance,up_daily_turn,up_weekly_turn,up_monthly_turn,entry,entry_fresh,entry_slowest
+601328,交通银行,2026-10-16,11.67,11.77,11.6,11.66,289163328,2346382848.0,0.3966106806159395,0.35040515000423195,0.09241106122341514,11.528571428571428,11.263809523809524,True,0,64,True,True,True,False,False,True,True,False,True

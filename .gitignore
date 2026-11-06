@@ -1,0 +1,35 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ---------- Node / 前端 ----------
+node_modules/
+webui/frontend/dist/
+webui/frontend/build/
+npm-debug.log*
+yarn-error.log*
+
+# ---------- 数据与生成物（体积大，不入库） ----------
+data/_cache/
+*.parquet
+*.xlsx
+*.log
+
+# ---------- 环境变量 / 密钥 ----------
+.env
+.env.*
+
+# ---------- 系统与编辑器 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

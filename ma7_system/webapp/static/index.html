@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MA7 上抛扫描</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">📈 MA7 上抛扫描</div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-mode="daily">日线上抛</button>
+    <button class="tab" data-mode="weekly">周线上抛</button>
+    <button class="tab" data-mode="res">日线 × 周线共振</button>
+    <button class="tab" data-mode="cycle">周线周期</button>
+  </nav>
+  <div class="meta" id="meta">加载中…</div>
+</header>
+
+<div class="toolbar">
+  <label class="lbl">扫描范围</label>
+  <select id="scope" class="sel"></select>
+  <button id="refresh" class="btn">重新扫描</button>
+  <div class="stats" id="stats"></div>
+</div>
+
+<main class="grid">
+  <section class="card">
+    <div class="card-hd">
+      <h3 id="h-up">上抛过程中</h3>
+      <span class="hint" id="hint-up"></span>
+      <button class="mini" id="exp-up" title="导出本表股票代码（txt）">导出</button>
+      <span class="count" id="c-up">—</span>
+    </div>
+    <div class="tbl-wrap"><table id="tbl-up"></table></div>
+  </section>
+  <section class="card">
+    <div class="card-hd">
+      <h3 id="h-watch">上抛观察名单</h3>
+      <span class="hint" id="hint-watch"></span>
+      <button class="mini" id="exp-watch" title="导出本表股票代码（txt）">导出</button>
+      <span class="count" id="c-watch">—</span>
+    </div>
+    <div class="tbl-wrap"><table id="tbl-watch"></table></div>
+  </section>
+</main>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-hd">
+    <div class="dk-title"><b id="dk-name">—</b><span id="dk-code" class="dk-code"></span></div>
+    <div class="dk-tags" id="dk-tags"></div>
+    <button class="close" id="dk-close">×</button>
+  </div>
+  <div class="charts">
+    <div class="chart-pane" id="pane1">
+      <div class="pane-title" id="pane-title-1"></div>
+      <div id="chart" class="chart"></div>
+    </div>
+    <div class="chart-pane" id="pane2" hidden>
+      <div class="pane-title" id="pane-title-2"></div>
+      <div id="chart2" class="chart"></div>
+    </div>
+  </div>
+  <div class="legend" id="legend"></div>
+</aside>
+
+<script src="/static/echarts.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

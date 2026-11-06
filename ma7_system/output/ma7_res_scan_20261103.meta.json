@@ -1,0 +1,58 @@
+{
+  "rule": "ma7_daily_x_weekly_segment",
+  "day_config": {
+    "ma7_window": 7,
+    "segment": {
+      "slope_window": 5,
+      "start_confirm": 2,
+      "end_confirm": 2
+    },
+    "signal": {
+      "close_above_days": 3,
+      "fallback_reclaim": true,
+      "fallback_min_dip": 1
+    },
+    "scan": {
+      "universe": "hs300",
+      "recent": 5
+    },
+    "_comment": "日线 MA7「上抛」扫描参数（v2：C 主 + B 兜底）。C：段内首次收盘>MA7 起连续 N 根；B：C 未出信号时，允许 1 日回踩后重新站上、连续 N 根；每段只取最早一个。段边界用 MA7 的 5 日斜率。"
+  },
+  "week_config": {
+    "ma7_window": 7,
+    "segment": {
+      "slope_window": 5,
+      "start_confirm": 2,
+      "end_confirm": 2
+    },
+    "signal": {
+      "close_above_days": 3,
+      "fallback_reclaim": true,
+      "fallback_min_dip": 1
+    },
+    "scan": {
+      "universe": "hs300",
+      "recent": 3
+    },
+    "_comment": "周线上抛（v2 同一套规则，仅周期换成 W-FRI）。段：MA7w 的 5 周斜率 >0，连续 2 周确认起止，允许 1 周回踩；C：段内首次收盘>MA7w 起连续 3 周；B：C 未出信号时 1 周回踩后重新站上、连续 3 周；每段只取最早一个。",
+    "resample": {
+      "rule": "W-FRI"
+    }
+  },
+  "last_day": "2026-11-03",
+  "data_range": [
+    "2015-09-01",
+    "2026-11-03"
+  ],
+  "universe_update_date": "2026-08-10",
+  "n_codes": 297,
+  "counts": {
+    "active": 130,
+    "confirmed": 11,
+    "confirmed_in_segment": 6,
+    "actionable": 6,
+    "candidate2": 17,
+    "candidate1": 22
+  },
+  "generated_at": "2026-11-03 23:17:14"
+}

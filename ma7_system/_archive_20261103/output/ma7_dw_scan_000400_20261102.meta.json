@@ -1,0 +1,69 @@
+{
+  "rule": "ma7_dw",
+  "rule_version": "frozen-2026-11-03",
+  "config": {
+    "segment": {
+      "slope_window": 5,
+      "start_confirm": 2,
+      "end_confirm": 2
+    },
+    "signal": {
+      "close_above_days": 3,
+      "fallback_reclaim": true,
+      "fallback_min_dip": 1,
+      "multi_reclaim": false
+    },
+    "scan": {
+      "universe": "hs300",
+      "recent": 5
+    },
+    "_comment": "日线 × 周线共振（冻结版 2026-11-03）独立参数：日线段/信号 + 周线区间 + 共振执行。改这里不影响 ma7_scan_close3.py（它读 ma7_close3.json）。",
+    "_signal_note": "multi_reclaim=false = v2 冻结口径（doc/日线扫描方案_v2.md §3.3）：C 主 + B 兜底，每段只取最早一个。true = 方案 3（每段 C 一次 + 每次 B 都给信号），用 --multi-signal 打开。",
+    "weekly": {
+      "window": 7,
+      "slope_window": 5,
+      "start_confirm": 2,
+      "end_confirm": 2,
+      "break_weeks": 3,
+      "rule": "W-FRI"
+    },
+    "_weekly_note": "MA7w=7 周 SMA；s5w 用 5 周窗口；斜率段 2 周确认、允许 1 周回踩；区间终点=连续 3 周收盘<MA7w（第 3 周为结束确认周）。",
+    "resonance": {
+      "position_mode": "ignore",
+      "exit_below_days": 3,
+      "cost": 0.002
+    },
+    "_resonance_note": "position_mode=ignore：同一票持仓中忽略新信号（与 600188_opt3_exit3.csv 一致）；add：不过滤。exit_below_days=3：连续 3 日收盘<MA7 次日开盘平仓。",
+    "ma7_window": 7
+  },
+  "weekly": {
+    "window": 7,
+    "slope_window": 5,
+    "start_confirm": 2,
+    "end_confirm": 2,
+    "break_weeks": 3,
+    "rule": "W-FRI"
+  },
+  "last_day": "2026-11-02",
+  "data_range": [
+    "2015-09-02",
+    "2026-11-02"
+  ],
+  "universe_update_date": "",
+  "n_codes": 1,
+  "flags": {
+    "multi_reclaim": false,
+    "position_mode": "ignore",
+    "strict_week": false,
+    "exit_below_days": 3
+  },
+  "counts": {
+    "active": 1,
+    "confirmed": 0,
+    "confirmed_in_wk": 0,
+    "actionable": 0,
+    "candidate2": 0,
+    "candidate1": 0
+  },
+  "generated_at": "2026-11-03 22:08:20"
+}

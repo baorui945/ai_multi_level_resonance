@@ -1,0 +1,71 @@
+{
+  "_comment": "独立日线 MA7 上抛策略参数（ma7daily）——不修改 config/resonance.json。缺项回落到 ma7daily/settings.py 的 DEF。",
+  "ma7": {
+    "window": 7,
+    "k": 3,
+    "theta": -0.0005,
+    "use_slope_filter": false,
+    "persist": 1,
+    "entry_backdate": false,
+    "require_higher_low": true,
+    "confirm_next_up": true,
+    "close_above": true,
+    "fresh_cross_days": 5,
+    "fresh_mode": "since_turn",
+    "bullish_only": true,
+    "min_body_pct": 0.3,
+    "min_close_pos": 0.6,
+    "min_vol_ratio": 0.8,
+    "max_dev_pct": null,
+    "accel": false,
+    "accel_lag": 3,
+    "reset_lookback": 0,
+    "reset_slope": -0.0005,
+    "reset_drawdown_pct": null,
+    "reset_dd_lookback": 20
+  },
+  "_ma7_note": "起点定义：MA7 当日高于前一日（上拐），同时收盘>MA7、当日低点高于前一日（更高低点），并满足 K 线质量；空仓状态下首次满足即为起点（不强制是下跌后的第一根，因为第一根可能低点更低/收盘未站上，真正起点可能是随后 1~2 日，如 000400 2026-09-29）。确认：下一交易日 MA7 继续上行；信号日仍记为满足条件当日（五粮液 7/14→7/15 确认，10/9→10/12 确认；9/30 因 10/8 MA7 转跌而不成立，10/26 只是 10/9 这段的延续）。theta 仅在 use_slope_filter=true 时作为额外斜率过滤；persist/entry_backdate 为兼容字段。K线质量默认较宽：实体>=0.3%、收盘位于振幅上方40%、量>=前5日均量0.8倍，以容纳 7/14 的缩量和 10/9 的小实体。fresh_cross_days 默认按 fresh_mode=since_turn 解释为「MA7 这段连续上行已持续的天数」<=5；改成 fresh_mode=above_run 则回到旧口径「收盘连续站上 MA7 的天数」<=5——旧口径下一次回踩跌破 MA7 就清零，会在趋势中继里反复重生起点（沪深300 2020 起约 1.9 万条），新口径把这种重生挡掉。",
+  "state": {
+    "exit_below_days": 2,
+    "exit_slope_days": 2,
+    "exit_slope_threshold": -0.0005,
+    "exit_below_tol": 0.0,
+    "cooldown_days": 0
+  },
+  "_state_note": "上抛途中允许单日收盘跌破 MA7（600985 2026-07~08 主升段有 7 天单日/连续 3 天跌破），因此退出用连续 2 日确认；斜率退出要求连续 2 日 < -0.05%/日，只有明确下弯才结束，MA7 走平/轻微下行不算破坏（否则五粮液 2026-09-30~10-09 的平底会被误杀）。cooldown_days 可选，0=退出后可立即重新入场。",
+  "presets": {
+    "_note": "可选预设，命令行用 --preset strict 叠加（不改变默认口径）。strict = 降噪：只做 MA7 上行段前 3 日内、且之前 20 日 MA7 自局部高点回撤 ≥1.25% 的起点；退出后 10 个交易日内不再入场。实测（沪深300，2020 起）：起点 18676→约 1.0 万条（每票每年 9.2→5 左右），000858 2026-07-14/10-09、000400 2026-09-29、600985 2026-07-14 全部保留。阈值 1.5% 是硬上限，超过会丢掉五粮液 10/9（回撤仅 1.54%）。",
+    "strict": {
+      "ma7": {
+        "fresh_cross_days": 3,
+        "reset_drawdown_pct": 1.25,
+        "reset_dd_lookback": 20
+      },
+      "state": {
+        "cooldown_days": 10
+      }
+    }
+  },
+  "backtest": {
+    "exec_mode": "open_open",
+    "horizons": [20, 30, 40, 60],
+    "main_horizon": 40,
+    "cost": 0.002,
+    "slippage_bp": 0,
+    "limit_up_pct": 0.097,
+    "limit_up_by_board": true,
+    "limit_up_pct_gem": 0.197,
+    "concurrent_cap": 0,
+    "exit_mode": "state",
+    "state_horizons": [60, 120, 250],
+    "state_exit": {
+      "rule": "breakdown",
+      "breakdown_ma": 7,
+      "breakdown_eps": 0.0,
+      "breakdown_days": 2
+    },
+    "exit": null,
+    "start": "2020-01-01"
+  },
+  "_backtest_note": "与主工程同口径（open_open、双边0.2%、涨停按板块分档），便于与 dw_first / phase_wm 对照。start 同时作为信号起点与价格面板起点。exit_mode=state（默认）用事件驱动退出：收盘<MA7 连续 breakdown_days 日离场（与扫描的 up/exit_flag 同构），state_horizons 为最长持有上限；exit_mode=fixed 回到旧的固定持有期（horizons），仅用于对照。注意 ABM 的 breakdown 用「前一根的 MA7」比较当日收盘，且在第 2 根跌破日的收盘成交，而 ma7daily 的状态退出在次日开盘执行——两者差异在 1 个交易日/1 根均线滞后以内。"
+}

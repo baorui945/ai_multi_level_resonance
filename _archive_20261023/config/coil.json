@@ -1,0 +1,78 @@
+{
+  "_comment": "COIL 独立策略（横盘蓄势→放量突破）唯一参数源。整包隔离：本文件只被 coil/ 读取，不影响 config/resonance.json。缺项自动回落到 coil/settings.py 的 DEF。",
+
+  "data": {
+    "start": "2015-09-01",
+    "min_bars": 400
+  },
+
+  "macd": { "fast": 30, "slow": 89, "signal": 9 },
+  "_macd_note": "沿用后复权数据口径的慢速 MACD。与旧共振策略的差别仅在于：本策略不读任何旧策略参数，全部在本文件独立定义。",
+
+  "ma": { "short": 7, "mid": 21, "long": 120 },
+  "_ma_note": "新增 MA120：用于度量长期均线走平与「均线粘合极限」。旧体系只有 MA7/MA21。",
+
+  "coil": {
+    "win": 120,
+    "max_cv": 0.086,
+    "max_box_w": 0.223,
+    "max_abs_beta": 0.0015,
+    "max_abs_curv": 0.00003,
+    "vol_compress": 1.06,
+    "max_ma_gap": 0.080,
+    "max_ma120_slope": 0.0014,
+    "max_macd_band": 0.041,
+    "max_hist_band": 0.0142,
+    "max_cross_n": 6,
+    "min_coil_bars": 60,
+    "min_coil_strength": 0.50
+  },
+  "_coil_note": "阈值按沪深300随机120只、2015-2026的横截面分位标定，默认取 P60 档（≈每300只10年36个信号）。硬条件=方差/箱体/波动压缩/均线粘合/MACD带宽；beta/curv/MA120斜率/柱体离散/交叉次数为软条件，进入 coil_strength。min_coil_bars=蓄势最短连续根数（每个根都要求其前120日窗口达标，所以60根已是很强的约束）。",
+
+  "breakout": {
+    "box_q": 0.90,
+    "eps": 0.005,
+    "vol_mult": 1.5,
+    "fresh_days": 5,
+    "require_hist_grow": true,
+    "require_ma_stack": true,
+    "cooldown_days": 20
+  },
+  "_breakout_note": "box_q=箱体上沿分位（只用 t-1 及以前的数据）；eps=突破缓冲；vol_mult=当日量/前20日均量；fresh_days=MACD 金叉新鲜度；require_hist_grow=红柱较前一日放大（二阶导转正）；require_ma_stack=MA7>MA21>MA120 多头排列；cooldown_days=同一股票两次信号的最小间隔（避免同一波突破被反复计数）。",
+
+  "score": {
+    "w_compress": 0.30,
+    "w_deriv": 0.15,
+    "w_ma": 0.20,
+    "w_macd": 0.20,
+    "w_hist": 0.075,
+    "w_cross": 0.075,
+    "w_break": 0.65,
+    "w_vol": 0.35,
+    "w_coil_total": 0.70
+  },
+  "_score_note": "coil_strength=蓄势类6项加权（权重和=1）；break_strength=突破幅度/量比加权（和=1）；最终 score=100*(w_coil_total*coil_strength+(1-w_coil_total)*break_strength)。仅用于排序与分组，不替代硬条件。",
+
+  "exit": {
+    "horizons": [5, 10, 20, 40, 60],
+    "main_horizon": 40,
+    "shrink_days": 6,
+    "max_hold": 120,
+    "ma_exit_period": 21,
+    "cost": 0.002
+  },
+  "_exit_note": "horizons=事件研究持有期；shrink_days=MACD柱连续缩短卖出；ma_exit_period=收盘跌破该均线卖出（趋势退出）；max_hold=最长持有；cost=双边合计成本。",
+
+  "backtest": {
+    "date_start": "2017-01-01",
+    "split": "2023-01-01",
+    "seed": 42
+  },
+  "_backtest_note": "date_start=统计起始（需 MA120/MACD 预热）；split=样本内/样本外切分点；seed=随机基准抽样种子。",
+
+  "reference": {
+    "desc": "待定：用户图中的「2025-05~11、12-16元横盘、10月拉到30.39」标的。填入代码与突破日后，coil_scan.py 会自动打印该股当日全部特征值用于阈值校准。",
+    "code": "",
+    "breakout_date": ""
+  }
+}

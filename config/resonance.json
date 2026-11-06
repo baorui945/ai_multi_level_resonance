@@ -1,0 +1,82 @@
+{
+  "_comment": "ai_multi_level_resonance 多周期共振模型配置 —— 所有参数唯一来源。缺项自动回落到 mlr/settings.py 的 DEF。",
+
+  "universe": { "default": "hs300" },
+
+  "data": {
+    "start": "2015-09-01",
+    "weekly_rule": "W-FRI",
+    "monthly_rule": "ME",
+    "period_mode": "closed",
+    "min_daily_bars": 400,
+    "monthly_history": false,
+    "monthly_history_start": "2000-01-01"
+  },
+  "_data_note": "period_mode=closed：周/月状态只认已收盘周期（名义周期末 <= 当日），scan 与 backtest 完全一致；asof 用进行中周期（更灵敏，但回测无法复现）。min_daily_bars：截至当日日线根数不足则三周期状态置 False。monthly_history=false：不补 2000 历史；月线 30/89/9 + warmup_mult=1.0，2015-09 起第 89 根月线（2023-02）才可用，此前 monthly_ready=False，phase 模式只做日+周。若设 true：用 ABM backward_monthly 补 2000 起历史，月线从 2014-11 起完全收敛（仅作对照，2020-2026 全程用月线会把年化拖到 −4.6%）。",
+
+  "macd": { "fast": 30, "slow": 89, "signal": 9 },
+  "_macd_note": "全局 MACD(30,89,9)，**日/周/月三周期统一**。月线用 warmup_mult=1.0（89 根）而不是 2.0：2.0 需要 178 根，而 2015-09 起全史只有 ~134 根，月线会永远不可用；89 根版本 2023-02 起可用，与『补 2000 历史、完全收敛』版本的状态一致率 97.6%。日/周线仍用 warmup_mult=2.0（EMA89 → 178 根）。",
+  "ma": { "short": 7, "long": 21 },
+
+  "timeframes": {
+    "daily":   { "enabled": true, "method": "hole_cross", "warmup_mult": 2.0,
+                 "max_cross_age": 120, "hole_red_window": 12, "hole_min_depth_ratio": 0.005, "momentum_retreat": 0.0 },
+    "weekly":  { "enabled": true, "method": "parabola", "warmup_mult": 2.0,
+                 "parabola": { "fit_window": 6, "min_r2": 0.5, "min_rel_curvature": 0.05,
+                               "require_net_up": true, "require_steepen": true, "require_dea_up": true,
+                               "hist_grow_bars": 2, "slope_bars": 2,
+                               "require_hist_positive": true,
+                               "require_above_ma_short": false, "require_ma_short_slope": false } },
+    "monthly": { "enabled": true, "method": "parabola", "warmup_mult": 1.0,
+                 "macd": { "fast": 30, "slow": 89, "signal": 9 },
+                 "parabola": { "fit_window": 4, "min_r2": 0.5, "min_rel_curvature": 0.02,
+                               "require_net_up": true, "require_steepen": true, "require_dea_up": true,
+                               "hist_grow_bars": 2, "slope_bars": 1,
+                               "require_hist_positive": true,
+                               "require_above_ma_short": false, "require_ma_short_slope": false } }
+  },
+  "_tf_note": "method=hole_cross(挖坑→起爆，日线默认) / parabola(DIF/DEA 抛物线形态，周月默认，不看金叉死叉)。**三周期 MACD 统一 30/89/9**；月线 warmup_mult=1.0（89 根，2023-02 起可用），此前的月线状态不可用。signal.mode=phase_wm 按每只股票的 monthly_ready 分段：未完成 → 日+周（dw_entry），完成 → 周+月（wm_ready_entry）；phase_entry 则后半段用三周期。parabola 公式：DIF 最近 fit_window 根拟合 y=a·x²+b·x+c，要求 a>0、末端斜率>0、顶点在窗口左侧、r²≥min_r2、rel≥min_rel_curvature、净上行且后半段每根平均涨幅更陡、DEA 同步上行、红柱连续 hist_grow_bars 根放大。max_cross_age/hole_* 仅 hole_cross(日线)使用；warmup_mult：MACD 前 int(slow×warmup_mult) 根置 NaN。",
+
+  "filters": {
+    "require_above_ma": true,
+    "require_ma_align": true,
+    "require_no_bearish_div": false
+  },
+
+  "signal": {
+    "mode": "phase_wm",
+    "fresh_daily_days": 5,
+    "wm_process_drawdown": 0.10,
+    "dw_max_lead_days": null
+  },
+  "_signal_note": "mode: phase_wm=分段（月线暖机完成前做日+周，完成后做周+月，默认）/ phase_entry=分段（完成后做三周期）/ any_entry=三周期共振首日 / fresh_daily=日线金叉后 N 根内 / slowest_turn=月线刚转多当日 / wm_first=周月共振首日 / dw_first=日周共振首日 / dw_watch=日线先动候选。wm_process_drawdown=周月『上抛过程』合并口径。dw_max_lead_days：dw 入场时『日线已领先周线天数』上限，null=不过滤；hole_cross 日线不要过滤（20.03%/MDD−26.2%），parabola 日线设 0（20.05% vs 18.58%）。",
+
+  "backtest": {
+    "exec_mode": "open_open",
+    "horizons": [20, 30, 40, 60],
+    "main_horizon": 40,
+    "cost": 0.002,
+    "slippage_bp": 0,
+    "limit_up_pct": 0.097,
+    "limit_up_by_board": true,
+    "limit_up_pct_gem": 0.197,
+    "concurrent_cap": 0,
+    "exit": null,
+    "start": "2020-01-01"
+  },
+  "_backtest_note": "start 同时作为价格面板起点与信号起点（否则 2020 前的空仓期会被算进年化/夏普/α）。slippage_bp 单边滑点，0=与历史口径一致。limit_up_by_board=true 时按代码前缀分档：主板 limit_up_pct(9.7%)、创业板/科创板(300/301/688) limit_up_pct_gem(19.7%)。concurrent_cap>0 时按建仓先后贪心截断并发持仓。exit 非空时走 ABM 事件退出（rule=trail_pct/chandelier/breakdown + time_stop/breakeven_atr），null=固定持有期。",
+  "_start_note": "信号统计起始与价格面板起点 2020-01-01（面板也从此起算，否则空仓期会稀释年化/夏普/α）：warmup_mult=2 后周线 EMA89 于 ~2019-04 收敛、月线 12/26/9 于 ~2019-11 收敛（数据起点 2015-09），留一个月余量。改了 warmup_mult / 月线 macd / 数据起点三者的任何一项都要重估此日期。",
+
+  "_reference": {
+    "desc": "校准参考：600188（兖矿能源）日线 2025-11-11 ~ 2026-03-13 的 MACD(30,89,9)『挖坑→起爆』形态（该口径现仅日线使用；周线为以下 parabola_case 的抛物线口径）",
+    "daily": "2025-11-11 顶部红柱衰减 → 2025-11-17 死叉 → 2025-12-16 绿柱谷值(-1.149) → 2026-01-09 零轴附近金叉(dif -0.016) → 红柱放大、DIF 0.06→8.61、收盘 90.30→119.62",
+    "weekly": "（旧『全周期 hole_cross』口径存档，现不再判定）2024-06→2025-07 长坑(谷值 -1.704) → 2025-08-01 金叉 → 红柱放大（2025-11 与 2026-02 起两段）",
+    "monthly": "（旧『全周期 hole_cross』口径存档，现不再判定）2022-09 红柱峰 11.6 → 2024-08 死叉 → 2025-06 绿柱谷值(-3.897) → 2026-03-31 金叉 → 2026-04 红柱放大；旧口径曾据此预期 2026-04-30 三周期共振，现周/月为抛物线口径，该预期仅存档",
+    "parabola_case": {
+      "desc": "600188 2020-11 ~ 2021-09 周/月同构抛物线（月线 MACD 12/26/9 + warmup 2.0，后复权）",
+      "weekly": "2020-11-20 DIF 0.356/DEA 0.187/hist +0.337（主升段首破），2020-09-18 已二次上抛 → 2021-03-12 回踩后再上抛（DIF 1.118→6.32）",
+      "monthly": "2020-07-31 首启（零轴下方第一抛 DIF -0.422/DEA -0.433/hist +0.022）→ 2020-11-30 DIF 0.310/DEA -0.181/hist +0.982 → 2021-03-31 DIF 0.942/DEA 0.250/hist +1.384",
+      "expect": "月线 2020-07-31 已上抛、周线 2020-09-18 转多 → wm_entry=2020-09-18；日线 hole_cross 2020-09-22 → entry=2020-09-22。旧口径（月线 30/89/9 无暖机）的『月线 2020-11-30 首启、周领先月 1.4 周』是月线半收敛假象：换数据起点月线首启会在 2020-08-31~2020-11-30 间漂移"
+    }
+  }
+}

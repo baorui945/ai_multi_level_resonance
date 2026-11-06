@@ -1,0 +1,3 @@
+﻿stock_code,stock_name,date,open_price,high_price,low_price,close_price,volume,amount,ma7,slope,slope_pct_day,dev_pct,close_gt_ma7,raw,confirmed,up,entry_flag,exit_flag,seg_no,seg_len,confirm_date
+600415,小商品城,2026-10-23,12.23,12.96,12.13,12.94,73230728,812968320.0,12.644285714285713,0.0015109757426547965,0.15109757426547965,2.338718788837424,True,True,True,True,True,False,75,1,2026-10-26
+603288,海天味业,2026-10-23,82.52,85.14,82.29,84.85,24668288,844827200.0,83.97857142857143,-0.0007812901256294413,-0.07812901256294413,1.0376796801905286,True,True,True,True,True,False,73,1,2026-10-26

@@ -1,0 +1,21 @@
+{
+  "_comment": "周线上抛（v2 同一套规则，仅周期换成 W-FRI）。段：MA7w 的 5 周斜率 >0，连续 2 周确认起止，允许 1 周回踩；C：段内首次收盘>MA7w 起连续 3 周；B：C 未出信号时 1 周回踩后重新站上、连续 3 周；每段只取最早一个。",
+  "ma7_window": 7,
+  "segment": {
+    "slope_window": 5,
+    "start_confirm": 2,
+    "end_confirm": 2
+  },
+  "signal": {
+    "close_above_days": 3,
+    "fallback_reclaim": true,
+    "fallback_min_dip": 1
+  },
+  "resample": {
+    "rule": "W-FRI"
+  },
+  "scan": {
+    "universe": "hs300",
+    "recent": 3
+  }
+}

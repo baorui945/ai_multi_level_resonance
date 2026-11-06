@@ -1,0 +1,58 @@
+{
+  "_comment": "LAUNCH v0.3：贴上沿突破（突破幅度<=4%）当天买，不等确认。日线口径。",
+  "data": {
+    "min_bars": 260
+  },
+  "ma": {
+    "short": 7,
+    "mid": 21,
+    "long": 120
+  },
+  "macd": {
+    "fast": 12,
+    "slow": 26,
+    "signal": 9
+  },
+  "rule": {
+    "box_win": 20,
+    "box_max_h": 0.12,
+    "box_tol": 0.0,
+    "min_pct": 0.03,
+    "min_pct3": null,
+    "min_vol": 1.5,
+    "max_breakout": 0.05,
+    "ma60_min": null,
+    "ma120_min": -0.01,
+    "ma120_60min": null,
+    "ma120_ref": 0.97,
+    "pos250_min": 0.6,
+    "macd_neg": 0.05,
+    "require_cross": true,
+    "cross_win": 20,
+    "confirm_days": 0,
+    "cooldown_days": 20,
+    "use_para": true,
+    "para_ma7_min": 0.0,
+    "para_ma21_min": 0.0,
+    "para_dif_min": 0.0,
+    "para_dea_min": 0.0,
+    "para_pos250": null,
+    "para_cross_max": 20
+  },
+  "pick": {
+    "min_price": 2.0,
+    "min_amount": 0.5,
+    "exclude_st": true,
+    "exclude_limit": true
+  },
+  "exit": {
+    "horizons": [
+      5,
+      10,
+      20,
+      40
+    ],
+    "main_horizon": 20,
+    "cost": 0.002
+  }
+}

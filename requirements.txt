@@ -1,0 +1,9 @@
+# 多周期上抛规则（MLR）运行依赖
+# 数据源 ai_backtest_model 需单独部署，并通过环境变量 ABM_ROOT 指定其目录。
+pandas>=2.0
+numpy>=1.24
+pymysql>=1.1
+pyarrow>=14.0
+openpyxl>=3.1
+xlsxwriter>=3.1
+matplotlib>=3.7
